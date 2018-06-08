@@ -1,5 +1,5 @@
 INCLUDES := -I src/ -I /usr/include/ -I /usr/local/cuda/include/ -I ./
-NVCC_OPTIONS := -O3 -gencode arch=compute_35,code=sm_35 -DCUDA_ARCH=35 -lcudart -std=c++11
+NVCC_OPTIONS := -O3 -gencode arch=compute_70,code=sm_70 -DCUDA_ARCH=70 -lcudart -std=c++11
 objects := RSD3d.o kdtree.o
 
 all: $(objects)

@@ -1,7 +1,17 @@
 //Extracting tets for points delaunay connectivity 
 //TODO test extractTet and make sure it runs correctly
 
+#include <stdint.h>
+#include <stdio.h>
 #include <vector>
+
+#include "spokes.cu"
+#include "utilities.h"
+
+#include <iostream>
+
+using namespace std;
+
 
 std::vector<uint32_t> commonElements2(const uint32_t v1, const uint32_t v2, uint32_t* const h_delaunay, const int MaxOffset){
 
@@ -101,4 +111,43 @@ std::vector<std::vector<uint32_t>> extractTets(const int NumPoints, uint32_t* co
 	}
 
 	return myTets;
+}
+
+void generateobj(std::vector<std::vector<uint32_t>> myTets, real3*const Points, int NumPoints) {
+	std::fstream file("Delaunay.obj", std::ios::out);
+        file.precision(30);
+        file<<"#v x-coord y-coord z-coord weight"<<std::endl;
+#ifdef FILEDEBUG
+	cout<<"#v x-coord y-coord z-coord weight"<<endl;
+	cout<<"Size: "<<myTets.size()<<endl;
+#endif
+
+	for(int i=0; i < myTets.size(); i++){
+		uint32_t p0 = myTets[i][0];
+        	uint32_t p1 = myTets[i][1];
+        	uint32_t p2 = myTets[i][2];
+        	uint32_t p3 = myTets[i][3];
+	
+                file<<"v "<< Points[p0].x <<" " << Points[p0].y <<" "<< Points[p0].z <<std::endl;
+		file<<"v "<< Points[p1].x <<" " << Points[p1].y <<" "<< Points[p1].z <<std::endl;
+		file<<"v "<< Points[p2].x <<" " << Points[p2].y <<" "<< Points[p2].z <<std::endl;
+		file<<"v "<< Points[p3].x <<" " << Points[p3].y <<" "<< Points[p3].z <<std::endl;
+
+#ifdef FILEDEBUG
+		cout<<"v "<< Points[p0].x <<" " << Points[p0].y <<" "<< Points[p0].z <<endl;
+		cout<<"v "<< Points[p1].x <<" " << Points[p1].y <<" "<< Points[p1].z <<endl;
+		cout<<"v "<< Points[p2].x <<" " << Points[p2].y <<" "<< Points[p2].z <<endl;
+		cout<<"v "<< Points[p3].x <<" " << Points[p3].y <<" "<< Points[p3].z <<endl;
+#endif
+
+        }
+
+	for(int i=0; i < myTets.size()*4; i++){
+		file<<"f "<< i << " " << i+1 << " " << i+2 << std::endl;
+		file<<"f "<< i+2 << " " << i+3 << " " << i+4 << std::endl;
+		file<<"f "<< i+4 << " " << i+5 << " " << i+6 << std::endl;
+		file<<"f "<< i+6 << " " << i+7 << " " << i+8 << std::endl;
+	}
+
+        file.close();
 }

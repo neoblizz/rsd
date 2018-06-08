@@ -28,7 +28,7 @@
 #ifdef _WIN32
 #define DEVICE_ID 0
 #else
-#define DEVICE_ID 3
+#define DEVICE_ID 0
 #endif
 
 
@@ -146,8 +146,11 @@ int main(int argc, char**argv){
 
 	SaveNeighborsCSV("del.csv", NumPoints, h_delaunay);
 	//6) Check correctness of the construction
-	//std::vector<std::vector<uint32_t>> myTets = extractTets(NumPoints, h_delaunay, MaxOffsets);
-	//validate(myTets, Points, h_neighbors,MaxOffsets);	
+	std::vector<std::vector<uint32_t>> myTets = extractTets(NumPoints, h_delaunay, MaxOffsets);
+	validate(myTets, Points, h_neighbors,MaxOffsets);	
+	
+	//6.5) Generate the Object file (wavefront)
+	generateobj(myTets, Points, NumPoints);
 
 	//7) Release memory
 
